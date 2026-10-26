@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scratch Hub - منصة مشاركة ملفات سكراتش</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Tajawal Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Tajawal', sans-serif; }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+        }
+        .glow-effect:hover {
+            box-shadow: 0 0 25px rgba(245, 158, 11, 0.25);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-6 py-3.5 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="bg-gradient-to-tr from-amber-500 to-orange-500 p-2.5 rounded-2xl shadow-lg shadow-orange-500/20">
+                <i class="fa-solid fa-code-branch text-white text-xl"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-black bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">Scratch Hub</h1>
+                <p class="text-[11px] text-slate-400 font-medium">مستودع مشاركة وتنزيل مشاريع Scratch (.sb3)</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <button onclick="openUploadModal()" class="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-bold px-4 py-2 rounded-xl text-sm transition shadow-lg shadow-orange-500/20 flex items-center gap-2">
+                <i class="fa-solid fa-cloud-arrow-up text-base"></i>
+                <span>نشر مشروعك</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 space-y-6">
+
+        <!-- Hero & Search Bar Section -->
+        <section class="glass-card rounded-3xl p-6 md:p-8 relative overflow-hidden text-center md:text-right flex flex-col md:flex-row items-center justify-between gap-6 border border-slate-800">
+            <div class="space-y-2 z-10 max-w-2xl">
+                <span class="bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-bold px-3 py-1 rounded-full inline-block mb-1">🚀 سريع وخفيف جداً</span>
+                <h2 class="text-2xl md:text-4xl font-extrabold text-white leading-tight">مركز المبرمجين لمشاركة أكواد ومشاريع Scratch</h2>
+                <p class="text-slate-400 text-sm">استكشف، حمل ملفات .sb3، أو أنشر إبداعاتك البرمجية للجميع مجاناً دون قيود.</p>
+            </div>
+
+            <!-- Search Field -->
+            <div class="w-full md:w-96 z-10">
+                <div class="relative">
+                    <input type="text" id="searchInput" oninput="handleSearch()" placeholder="ابحث باسم المشروع، الكاتب، أو الوصف..." class="w-full bg-slate-900/90 border border-slate-700 rounded-2xl py-3 pr-11 pl-4 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500 transition shadow-inner">
+                    <i class="fa-solid fa-magnifying-glass absolute right-4 top-3.5 text-slate-400 text-base"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tags Filter -->
+        <section class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none" id="tagsContainer">
+            <button onclick="filterByTag('')" class="tag-btn active bg-amber-500 text-slate-950 font-bold px-4 py-1.5 rounded-xl text-xs transition flex-shrink-0">الكل</button>
+            <button onclick="filterByTag('العاب')" class="tag-btn bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 font-medium px-4 py-1.5 rounded-xl text-xs transition flex-shrink-0">العاب</button>
+            <button onclick="filterByTag('تعليمي')" class="tag-btn bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 font-medium px-4 py-1.5 rounded-xl text-xs transition flex-shrink-0">تعليمي</button>
+            <button onclick="filterByTag('فيزياء')" class="tag-btn bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 font-medium px-4 py-1.5 rounded-xl text-xs transition flex-shrink-0">فيزياء</button>
+            <button onclick="filterByTag('فضائيات')" class="tag-btn bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 font-medium px-4 py-1.5 rounded-xl text-xs transition flex-shrink-0">فضائيات</button>
+        </section>
+
+        <!-- Projects Grid Container -->
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="projectsGrid">
+            <!-- Dynamic Content Injected via JavaScript -->
+        </section>
+
+    </main>
+
+    <!-- Upload Project Modal -->
+    <div id="uploadModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-card w-full max-w-lg rounded-3xl p-6 border border-slate-700 shadow-2xl relative space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-cloud-arrow-up text-amber-400"></i> نشر مشروع سكراتش جديد
+                </h3>
+                <button onclick="closeUploadModal()" class="text-slate-400 hover:text-white p-1 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="uploadForm" onsubmit="submitProject(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">عنوان المشروع *</label>
+                    <input type="text" id="pTitle" required placeholder="مثال: لعبة المتاهة الذكية" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-amber-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">اسم الناشر / المبرمج *</label>
+                    <input type="text" id="pAuthor" required placeholder="اسمك أو لقبك" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-amber-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">وصف المشروع</label>
+                    <textarea id="pDescription" rows="3" placeholder="اكتب تفاصيل عن كيفية اللعب أو أهداف المشروع..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-amber-500 resize-none"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">التصنيفات (افصل بينها بفاصلة)</label>
+                    <input type="text" id="pTags" placeholder="العاب, مغامرة, تعليمي" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-100 focus:outline-none focus:border-amber-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">اختر ملف سكراتش (.sb3 أو .json) *</label>
+                    <input type="file" id="pFile" accept=".sb3,.json" required class="w-full text-xs text-slate-400 border border-slate-700 bg-slate-900 rounded-xl p-2 cursor-pointer focus:outline-none">
+                </div>
+
+                <div class="pt-2 flex justify-end gap-2">
+                    <button type="button" onclick="closeUploadModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold">إلغاء</button>
+                    <button type="submit" id="submitBtn" class="px-5 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 rounded-xl text-xs font-bold flex items-center gap-2 shadow-lg shadow-amber-500/20">
+                        <span>رفع ونشر</span>
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white px-5 py-3.5 rounded-2xl border border-slate-700 shadow-2xl flex items-center gap-3 transition-all duration-300 transform translate-y-24 opacity-0 z-50">
+        <i id="toastIcon" class="fa-solid fa-circle-check text-amber-400 text-lg"></i>
+        <span id="toastMsg" class="text-xs font-bold">تنبيه</span>
+    </div>
+
+    <!-- Scripts Logic -->
+    <script>
+        let currentTag = '';
+        let searchQuery = '';
+
+        async function fetchProjects() {
+            try {
+                const res = await fetch(`/api/projects?query=${encodeURIComponent(searchQuery)}&tag=${encodeURIComponent(currentTag)}`);
+                const data = await res.json();
+                
+                if (data.success) {
+                    renderProjects(data.projects);
+                }
+            } catch (err) {
+                showToast('فشل في جلب المشاريع من الخادم', 'fa-triangle-exclamation');
+            }
+        }
+
+        function renderProjects(projects) {
+            const grid = document.getElementById('projectsGrid');
+            grid.innerHTML = '';
+
+            if (projects.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-16 text-center text-slate-500 space-y-3">
+                        <i class="fa-solid fa-folder-open text-4xl"></i>
+                        <p class="text-sm font-semibold">لم يتم العثور على أية مشاريع مطابقة</p>
+                    </div>
+                `;
+                return;
+            }
+
+            projects.forEach(p => {
+                const card = document.createElement('div');
+                card.className = "glass-card rounded-2xl p-5 border border-slate-800 hover:border-amber-500/50 transition-all duration-300 glow-effect flex flex-col justify-between space-y-4";
+
+                const tagsHtml = p.tags.map(t => `<span class="bg-slate-800 text-slate-400 text-[10px] px-2.5 py-1 rounded-md font-semibold">${t}</span>`).join(' ');
+
+                card.innerHTML = `
+                    <div class="space-y-3">
+                        <div class="flex items-start justify-between">
+                            <h3 class="font-bold text-slate-100 text-base leading-snug">${escapeHtml(p.title)}</h3>
+                            <span class="bg-amber-500/10 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-500/20">.sb3</span>
+                        </div>
+                        <p class="text-slate-400 text-xs line-clamp-2">${escapeHtml(p.description || 'لا يوجد وصف متاح')}</p>
+                        <div class="flex flex-wrap gap-1.5">${tagsHtml}</div>
+                    </div>
+
+                    <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+                        <div class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-user-ninja text-amber-400"></i>
+                            <span class="font-medium">${escapeHtml(p.author)}</span>
+                        </div>
+
+                        <div class="flex items-center gap-3">
+                            <button onclick="likeProject('${p.id}', this)" class="hover:text-rose-400 transition flex items-center gap-1">
+                                <i class="fa-solid fa-heart text-slate-500"></i>
+                                <span class="like-count font-mono">${p.likes}</span>
+                            </button>
+                            <a href="/api/projects/download/${p.id}" download class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-xl transition flex items-center gap-1.5 shadow-md shadow-amber-500/10">
+                                <i class="fa-solid fa-download"></i>
+                                <span>تنزيل</span>
+                            </a>
+                        </div>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        async function likeProject(id, btn) {
+            try {
+                const res = await fetch(`/api/projects/like/${id}`, { method: 'POST' });
+                const data = await res.json();
+                if (data.success) {
+                    const countEl = btn.querySelector('.like-count');
+                    const iconEl = btn.querySelector('i');
+                    countEl.textContent = data.likes;
+                    iconEl.className = 'fa-solid fa-heart text-rose-500';
+                    showToast('تمت إضافة الإعجاب!');
+                }
+            } catch (err) {
+                showToast('تعذر تسجيل الإعجاب', 'fa-triangle-exclamation');
+            }
+        }
+
+        function handleSearch() {
+            searchQuery = document.getElementById('searchInput').value;
+            fetchProjects();
+        }
+
+        function filterByTag(tag) {
+            currentTag = tag;
+            document.querySelectorAll('.tag-btn').forEach(btn => {
+                btn.className = 'tag-btn bg-slate-900 border border-slate-800 text-slate-300 font-medium px-4 py-1.5 rounded-xl text-xs transition flex-shrink-0';
+            });
+            event.target.className = 'tag-btn active bg-amber-500 text-slate-950 font-bold px-4 py-1.5 rounded-xl text-xs transition flex-shrink-0';
+            fetchProjects();
+        }
+
+        function openUploadModal() {
+            document.getElementById('uploadModal').classList.remove('hidden');
+        }
+
+        function closeUploadModal() {
+            document.getElementById('uploadModal').classList.add('hidden');
+        }
+
+        async function submitProject(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerHTML = `<span>جاري الرفع...</span> <i class="fa-solid fa-spinner animate-spin"></i>`;
+
+            const formData = new FormData();
+            formData.append('title', document.getElementById('pTitle').value);
+            formData.append('author', document.getElementById('pAuthor').value);
+            formData.append('description', document.getElementById('pDescription').value);
+            formData.append('tags', document.getElementById('pTags').value);
+            formData.append('file', document.getElementById('pFile').files[0]);
+
+            try {
+                const res = await fetch('/api/projects/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    showToast('تم نشر مشروعك بنجاح!', 'fa-circle-check');
+                    document.getElementById('uploadForm').reset();
+                    closeUploadModal();
+                    fetchProjects();
+                } else {
+                    showToast(data.message || 'حدث خطأ أثناء الرفع', 'fa-triangle-exclamation');
+                }
+            } catch (err) {
+                showToast('حدث خطأ في الاتصال بالخادم', 'fa-triangle-exclamation');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<span>رفع ونشر</span> <i class="fa-solid fa-paper-plane"></i>`;
+            }
+        }
+
+        function showToast(msg, icon = 'fa-circle-check') {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').textContent = msg;
+            document.getElementById('toastIcon').className = `fa-solid ${icon} text-amber-400 text-lg`;
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3000);
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/[&<>"']/g, function(m) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+            });
+        }
+
+        // Initialize Fetch
+        window.onload = fetchProjects;
+    </script>
+</body>
+</html>
